@@ -1,5 +1,18 @@
 (() => {
   'use strict';
+  const resources = ['r001','r002','r003','r004','r007','r013','r014','r015','r016','r017'];
+  const channels = ['site','article01','vk_post01','tg_post01','ok_post01','yt_video01','rutube_video01','email','catalog'];
+  const sources = new Set(['reader_share','own_yt_video01','own_rutube_video01',
+    ...resources.flatMap(r => channels.map(c => r + '_' + c))]);
+  const campaigns = new Set(['pilot01','organic01','test01']);
+  function cleanQuery(search) {
+    const q = new URLSearchParams(search);
+    const campaign = q.get('utm_campaign'), source = q.get('utm_source');
+    if (!campaigns.has(campaign) || !sources.has(source) ||
+        q.getAll('utm_campaign').length !== 1 || q.getAll('utm_source').length !== 1) return '';
+    return '?' + new URLSearchParams({utm_campaign:campaign, utm_source:source}).toString();
+  }
+
   const base = new URL('.', document.currentScript.src);
   async function init() {
     let config;
@@ -24,10 +37,10 @@
       tracker.onload = () => {
         const gc = window.goatcounter;
         if (!gc || typeof gc.count !== 'function') return;
-        // count.js normally includes the current query string and screen width;
-        // remove both before the request is built. Disable sessions per hit too.
+        // Keep only public placement codes. Full query strings and screen width never leave.
+        // No sessions or campaign persistence between pages.
         const original = gc.get_data;
-        gc.get_data = vars => { const data = original(vars); delete data.q; delete data.s; return data; };
+        gc.get_data = vars => { const data = original(vars); const q = cleanQuery(location.search); if (q) data.q = q; else delete data.q; delete data.s; return data; };
         let referrer = '';
         try {
           const ref = new URL(document.referrer);
