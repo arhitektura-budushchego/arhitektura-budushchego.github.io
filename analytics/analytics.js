@@ -1,5 +1,23 @@
 (() => {
   'use strict';
+  let sources = new Set(), campaigns = new Set();
+  const campaignCode = /^(?:c[0-9]{3}|pilot[0-9]{2}|organic[0-9]{2}|test[0-9]{2}|bloggers[0-9]{2})$/;
+  const sourceCode = /^(?:p[0-9]{3}|r[0-9]{3}_(?:site|article[0-9]{2}|vk_post[0-9]{2}|tg_post[0-9]{2}|ok_post[0-9]{2}|yt_video[0-9]{2}|rutube_video[0-9]{2}|email|catalog|review[0-9]{2})|reader_share|own_yt_video[0-9]{2}|own_rutube_video[0-9]{2})$/;
+  function setAttribution(data) {
+    if (!data || data.version !== 1 || Object.keys(data).sort().join(',') !== 'campaigns,sources,version') return;
+    const valid = (list, limit, pattern) => Array.isArray(list) && list.length <= limit &&
+      list.every(code => typeof code === 'string' && pattern.test(code)) && new Set(list).size === list.length;
+    if (!valid(data.campaigns, 100, campaignCode) || !valid(data.sources, 2000, sourceCode)) return;
+    campaigns = new Set(data.campaigns); sources = new Set(data.sources);
+  }
+  function cleanQuery(search) {
+    const q = new URLSearchParams(search);
+    const campaign = q.get('utm_campaign'), source = q.get('utm_source');
+    if (!campaigns.has(campaign) || !sources.has(source) ||
+        q.getAll('utm_campaign').length !== 1 || q.getAll('utm_source').length !== 1) return '';
+    return '?' + new URLSearchParams({utm_campaign:campaign, utm_source:source}).toString();
+  }
+
   const base = new URL('.', document.currentScript.src);
   async function init() {
     let config;
@@ -11,6 +29,18 @@
     if (config.enabled !== true || !/^[a-z0-9][a-z0-9-]*$/.test(config.siteCode) ||
         location.hostname !== config.productionHost) return;
     const origin = 'https://' + config.siteCode + '.goatcounter.com';
+    // Configuration contains public placement codes only, never contacts or visitor IDs.
+    // Failure disables attribution, not the page or ordinary pageview counting.
+    try {
+      const response = await fetch(new URL('attribution.json', base), {
+        credentials: 'omit', referrerPolicy: 'no-referrer', cache: 'no-cache', signal: AbortSignal.timeout(5000)
+      });
+      if (response.ok) {
+        const body = await response.text();
+        if (body.length <= 131072) setAttribution(JSON.parse(body));
+      }
+    } catch { /* Empty allowlists: no query parameters are sent. */ }
+
     // The service never needs cookies for collection or public counts.
     // Owner may set this local flag manually; no identifier is created for readers.
     let excluded = navigator.globalPrivacyControl === true || navigator.doNotTrack === '1';
@@ -24,10 +54,10 @@
       tracker.onload = () => {
         const gc = window.goatcounter;
         if (!gc || typeof gc.count !== 'function') return;
-        // count.js normally includes the current query string and screen width;
-        // remove both before the request is built. Disable sessions per hit too.
+        // Keep only public placement codes. Full query strings and screen width never leave.
+        // No sessions or campaign persistence between pages.
         const original = gc.get_data;
-        gc.get_data = vars => { const data = original(vars); delete data.q; delete data.s; return data; };
+        gc.get_data = vars => { const data = original(vars); const q = cleanQuery(location.search); if (q) data.q = q; else delete data.q; delete data.s; return data; };
         let referrer = '';
         try {
           const ref = new URL(document.referrer);
