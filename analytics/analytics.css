@@ -1,0 +1,8 @@
+.visitor-stats{margin-top:20px;border-top:1px solid var(--line);color:var(--muted);font:13px/1.6 Arial,sans-serif}
+.visitor-stats-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.visitor-stats-grid span{display:block;overflow-wrap:anywhere}
+.visitor-stats-grid strong{display:block;font-size:25px;font-weight:400;color:var(--fg)}
+.visitor-stats p{max-width:900px;margin:14px 0}
+@media(max-width:620px){.visitor-stats-grid{grid-template-columns:1fr;gap:12px}}
+
+.visitor-stats h2{font:18px/1.4 Arial,sans-serif;color:var(--fg);margin:0 0 18px}
