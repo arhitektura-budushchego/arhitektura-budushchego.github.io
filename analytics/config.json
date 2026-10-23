@@ -1,5 +1,5 @@
 {
-  "enabled": false,
-  "siteCode": "",
+  "enabled": true,
+  "siteCode": "nvn",
   "productionHost": "arhitektura-budushchego.github.io"
 }
