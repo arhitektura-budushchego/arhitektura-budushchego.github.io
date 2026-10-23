@@ -90,7 +90,7 @@
   audio.addEventListener('error', () => { status.textContent='Не удалось загрузить MP3. Попробуйте «Продолжить» или скачайте запись.';update();resume.disabled=false; });
   window.addEventListener('pagehide',save);
   document.addEventListener('visibilitychange', () => { if(document.visibilityState==='hidden')save(); });
-  if(channel)channel.onmessage=()=>{if(!audio.paused){audio.pause();status.textContent='Воспроизведение продолжено в другой вкладке.';}};
+  if(channel)channel.onmessage=()=>{if(!audio.paused){active=false;audio.pause();status.textContent='Воспроизведение продолжено в другой вкладке.';}};
   section.append(title,audio,timing,buttons,download,status);
   if(!pageHost){ section.append(document.createElement('br'),full); const anchor=article.querySelector('.tools')||article.querySelector('h1'); anchor.after(section); }
   document.querySelectorAll('[data-audio-track]').forEach(b=>b.addEventListener('click',()=>choose(tracks.findIndex(t=>t.id===b.dataset.audioTrack),true,0)));
