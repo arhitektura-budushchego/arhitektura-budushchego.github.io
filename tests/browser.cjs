@@ -7,7 +7,7 @@ const origin = 'https://arhitektura-budushchego.github.io';
 const trackerSource = process.env.GOATCOUNTER_TRACKER_SOURCE;
 if (!trackerSource) throw new Error('Set GOATCOUNTER_TRACKER_SOURCE to an audited count.js file');
 (async () => {
-  const browser = await chromium.launch({headless:true});
+  const browser = await chromium.launch({headless:true, ...(process.env.CHROMIUM_EXECUTABLE ? {executablePath:process.env.CHROMIUM_EXECUTABLE,args:['--no-sandbox','--disable-dev-shm-usage','--disable-gpu']} : {})});
   let checks = 0;
   for (const scenario of ['disabled','desktop','desktop-dark','mobile-light','mobile-dark','unavailable','excluded','dnt','gpc','zero']) {
     const context = await browser.newContext({viewport:scenario.startsWith('mobile')?{width:390,height:844}:{width:1280,height:900}});
