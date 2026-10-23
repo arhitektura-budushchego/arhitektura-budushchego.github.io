@@ -1,0 +1,16 @@
+.audiobook-player{border:1px solid var(--line);padding:20px;margin:24px 0;color:var(--fg);background:var(--bg);font:16px/1.6 Arial,sans-serif;max-width:100%;overflow-wrap:anywhere}
+.audiobook-player h2{font:24px/1.35 Georgia,serif;margin:0 0 18px}
+.audiobook-player audio{display:block;width:100%;max-width:100%;margin:12px 0;color-scheme:light}
+body.dark .audiobook-player audio{color-scheme:dark}
+.audio-buttons{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+.audio-buttons button,.audio-list button{padding:10px 14px;line-height:1.4}
+.audio-buttons button:disabled{opacity:.5;cursor:default}
+.audio-time{font-variant-numeric:tabular-nums;margin:10px 0}
+.audio-status{font-size:14px;color:var(--muted);margin:12px 0 0}
+.audio-list{list-style:none;padding:0;counter-reset:none}
+.audio-list li{padding:22px 16px;border-top:1px solid var(--line);scroll-margin-top:20px}
+.audio-list h2{font:25px/1.35 Georgia,serif;margin:0 0 10px;overflow-wrap:anywhere}
+.audio-list .audio-selected{background:color-mix(in srgb,var(--fg) 7%,var(--bg));border-left:3px solid var(--fg)}
+.audio-track-actions{display:flex;gap:15px;flex-wrap:wrap;align-items:center;font:14px/1.6 Arial,sans-serif}
+.audio-duration{font:14px/1.5 Arial,sans-serif;color:var(--muted);margin:8px 0 14px}
+@media(max-width:620px){.audiobook-player{padding:14px}.audio-buttons button{flex:1 1 140px}.audio-list li{padding:20px 8px}}

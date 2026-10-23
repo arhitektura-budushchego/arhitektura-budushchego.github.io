@@ -1,4 +1,141 @@
 {
-  "version": 1,
-  "chapters": {}
+  "version": 2,
+  "language": "ru",
+  "tracks": [
+    {
+      "id": "introduction",
+      "page": "introduction.html",
+      "title": "Введение",
+      "src": "audio/introduction.mp3",
+      "duration": 114.888,
+      "bytes": 919341,
+      "sha256": "8efef7155e27c574fb5ec3fbd06ffabdfe5521f9bce8bc43a4935b988baefb69"
+    },
+    {
+      "id": "chapter-1",
+      "page": "chapter-1.html",
+      "title": "Глава 1. В какой стране будут жить наши дети?",
+      "src": "audio/chapter-1.mp3",
+      "duration": 508.344,
+      "bytes": 4066989,
+      "sha256": "032f9ca6ac7232cbbd56a1bcc53bd26b04a97262abcd0fd15fbbe18b806be4c6"
+    },
+    {
+      "id": "chapter-2",
+      "page": "chapter-2.html",
+      "title": "Глава 2. Бог, любовь и справедливость",
+      "src": "audio/chapter-2.mp3",
+      "duration": 976.44,
+      "bytes": 7811757,
+      "sha256": "9bdd2f4c972481a585f78256e8cb8cce14ba46780c64c1df59846677996fdc87"
+    },
+    {
+      "id": "chapter-3",
+      "page": "chapter-3.html",
+      "title": "Глава 3. Новый человек и общество любви",
+      "src": "audio/chapter-3.mp3",
+      "duration": 591.264,
+      "bytes": 4730349,
+      "sha256": "8bf1abaafb109a83e6c50469ceb5b768ec62c4afbf8f953ace37abef80f8bbe8"
+    },
+    {
+      "id": "chapter-4",
+      "page": "chapter-4.html",
+      "title": "Глава 4. Церковь, соборность и государственное управление",
+      "src": "audio/chapter-4.mp3",
+      "duration": 1073.16,
+      "bytes": 8585517,
+      "sha256": "e7ee1a8936c5ee369234c00aed634113e43b97c50e7d11abe16bd6ecfcb6af22"
+    },
+    {
+      "id": "chapter-5",
+      "page": "chapter-5.html",
+      "title": "Глава 5. Соборное хозяйствование: общество без денег",
+      "src": "audio/chapter-5.mp3",
+      "duration": 670.512,
+      "bytes": 5364333,
+      "sha256": "1678255bf2f121738cabb7fb186a0c8dd9bd198c17c320e56e53e8db4062f2cb"
+    },
+    {
+      "id": "chapter-6",
+      "page": "chapter-6.html",
+      "title": "Глава 6. Труд, обеспечение потребностей и забота о человеке",
+      "src": "audio/chapter-6.mp3",
+      "duration": 709.056,
+      "bytes": 5672685,
+      "sha256": "f04f684bb4439dafd7d0bea6f7ecce5d8dbfbd3d4e4907febfe6c3862ef02db6"
+    },
+    {
+      "id": "chapter-7",
+      "page": "chapter-7.html",
+      "title": "Глава 7. Семья, дети и воспитание в новом обществе",
+      "src": "audio/chapter-7.mp3",
+      "duration": 1676.448,
+      "bytes": 13411821,
+      "sha256": "5368f9d0b159ccb2334d2253ecf9276077e2ebd69edc1485ead022df34a72c05"
+    },
+    {
+      "id": "chapter-8",
+      "page": "chapter-8.html",
+      "title": "Глава 8. Свобода, церковный суд и защита человека",
+      "src": "audio/chapter-8.mp3",
+      "duration": 372.096,
+      "bytes": 2977005,
+      "sha256": "66e302a53e159516a31931277c0e2188a59d1e127edd66abaa0bd3477d4676a9"
+    },
+    {
+      "id": "chapter-9",
+      "page": "chapter-9.html",
+      "title": "Глава 9. Безопасность и отношения с другими государствами",
+      "src": "audio/chapter-9.mp3",
+      "duration": 168.024,
+      "bytes": 1344429,
+      "sha256": "e9d330037f43ea31c8b79d93558e7c7fc841442f1414568b0a458dcfc8c43c37"
+    },
+    {
+      "id": "chapter-10",
+      "page": "chapter-10.html",
+      "title": "Глава 10. Для чего живёт человек и зачем ему меняться?",
+      "src": "audio/chapter-10.mp3",
+      "duration": 996.648,
+      "bytes": 7973421,
+      "sha256": "128d518bb407eee633f6ead720c7b07449b7eccb99b36aeb51a56180eb101deb"
+    },
+    {
+      "id": "chapter-11",
+      "page": "chapter-11.html",
+      "title": "Глава 11. От единомышленников к соборному обществу",
+      "src": "audio/chapter-11.mp3",
+      "duration": 827.424,
+      "bytes": 6619629,
+      "sha256": "e157e4b154df3b6421fa7e8faa0c9ab0ec0f4eccc49cea92bd6b56c71c7e97bc"
+    },
+    {
+      "id": "chapter-12",
+      "page": "chapter-12.html",
+      "title": "Глава 12. Переходный период: ошибки, испытания и исправления",
+      "src": "audio/chapter-12.mp3",
+      "duration": 888.048,
+      "bytes": 7104621,
+      "sha256": "2e171c75131231a2d7368aef697e587817fae025dcb211c5a398cf6b845ca85d"
+    },
+    {
+      "id": "chapter-13",
+      "page": "chapter-13.html",
+      "title": "Глава 13. Свобода человека перед Богом и начало суда",
+      "src": "audio/chapter-13.mp3",
+      "duration": 651.6,
+      "bytes": 5213037,
+      "sha256": "412e2190281ef6707a337da0bb465ee57dc3f53246d23a0679e5092754c9cc9c"
+    },
+    {
+      "id": "chapter-14",
+      "page": "chapter-14.html",
+      "title": "Глава 14. Будущее начинается с тебя",
+      "src": "audio/chapter-14.mp3",
+      "duration": 476.856,
+      "bytes": 3815085,
+      "sha256": "ba57d1497e99bc1fc1942840e0dcd19bd8be133aaddcf97faca05d90e7c3f6ce"
+    }
+  ]
 }
