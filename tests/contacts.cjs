@@ -1,5 +1,5 @@
 const {chromium}=require('playwright');const fs=require('fs'),path=require('path'),assert=require('assert/strict');
-const root=path.resolve(__dirname,'..'),origin='https://arhitektura-budushchego.github.io',address='mailto:arhitektura.budushchego@mail.ru';
+const root=path.resolve(__dirname,'..'),origin='https://arhitektura-budushchego.github.io',address='mailto:arhitektura.budushchego@proton.me';
 (async()=>{let checks=0;const browser=await chromium.launch({executablePath:process.env.CHROMIUM_EXECUTABLE,args:['--no-sandbox','--disable-dev-shm-usage','--disable-gpu']});
 for(const width of [320,390,768,1440])for(const theme of ['light','dark']){
 const context=await browser.newContext({viewport:{width,height:900},colorScheme:theme});await context.addInitScript(t=>localStorage.setItem('theme',t),theme);const page=await context.newPage();await page.route('**/*',r=>{const u=new URL(r.request().url());if(u.origin!==origin||u.pathname.startsWith('/analytics/'))return r.abort();return r.fulfill({path:path.join(root,u.pathname==='/'?'index.html':u.pathname)});});
