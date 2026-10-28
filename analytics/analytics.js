@@ -54,17 +54,17 @@
       tracker.onload = () => {
         const gc = window.goatcounter;
         if (!gc || typeof gc.count !== 'function') return;
-        // Keep only public placement codes. Full query strings and screen width never leave.
-        // No sessions or campaign persistence between pages.
+        // Keep only public placement codes. Full query strings never leave.
+        // Sessions are enabled in GoatCounter; campaign attribution is not persisted between pages.
         const original = gc.get_data;
-        gc.get_data = vars => { const data = original(vars); const q = cleanQuery(location.search); if (q) data.q = q; else delete data.q; delete data.s; return data; };
+        gc.get_data = vars => { const data = original(vars); const q = cleanQuery(location.search); if (q) data.q = q; else delete data.q; return data; };
         let referrer = '';
         try {
           const ref = new URL(document.referrer);
           if (ref.origin !== location.origin) referrer = ref.origin;
         } catch {}
         const count = () => gc.count({path: location.pathname === '/index.html' ? '/' : location.pathname,
-          title: document.title, referrer, no_session: true});
+          title: document.title, referrer});
         if (document.prerendering) document.addEventListener('prerenderingchange', count, {once: true});
         else count();
       };
