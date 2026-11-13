@@ -9,7 +9,7 @@
   const button = document.getElementById('native-share');
   button.hidden = typeof navigator.share !== 'function';
   button.addEventListener('click', async () => {
-    try { await navigator.share({title:'Архитектура будущего',text:'Бесплатная православная концептуальная книга',url:'https://arhitektura-budushchego.github.io/?utm_campaign=organic01&utm_source=reader_share'}); }
+    try { await navigator.share({title:button.dataset.title,text:button.dataset.text,url:button.dataset.url}); }
     catch(error) { if(error.name !== 'AbortError') status.textContent = 'Поделиться можно копированием ссылки выше.'; }
   });
 })();
