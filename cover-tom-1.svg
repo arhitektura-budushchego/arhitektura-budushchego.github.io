@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="700" viewBox="0 0 480 700" role="img" aria-labelledby="title">
+<title id="title">Архитектура будущего. Том I</title>
+<rect width="480" height="700" fill="#242424"/>
+<rect x="28" y="28" width="424" height="644" fill="none" stroke="#c1b7a8"/>
+<g text-anchor="middle" fill="#f4f0e9" font-family="Georgia,DejaVu Serif,serif">
+<text x="240" y="114" font-size="21">АРХИТЕКТУРА БУДУЩЕГО</text>
+<text x="240" y="212" font-size="24">ТОМ I</text>
+<text x="240" y="314" font-size="40">Архитектура</text>
+<text x="240" y="370" font-size="40">будущего</text>
+</g>
+<path d="M 196,492 H 284" stroke="#c1b7a8"/>
+</svg>
