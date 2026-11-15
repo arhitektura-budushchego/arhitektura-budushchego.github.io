@@ -19,6 +19,18 @@
   }
 
   const base = new URL('.', document.currentScript.src);
+  async function fetchWithTimeout(url, options, timeout, read) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeout);
+    try {
+      const response = await fetch(url, {...options, signal: controller.signal});
+      if (!response.ok) throw new Error('unavailable');
+      return await read(response);
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
   async function init() {
     let config;
     try {
@@ -32,13 +44,10 @@
     // Configuration contains public placement codes only, never contacts or visitor IDs.
     // Failure disables attribution, not the page or ordinary pageview counting.
     try {
-      const response = await fetch(new URL('attribution.json', base), {
-        credentials: 'omit', referrerPolicy: 'no-referrer', cache: 'no-cache', signal: AbortSignal.timeout(5000)
-      });
-      if (response.ok) {
-        const body = await response.text();
-        if (body.length <= 131072) setAttribution(JSON.parse(body));
-      }
+      const body = await fetchWithTimeout(new URL('attribution.json', base), {
+        credentials: 'omit', referrerPolicy: 'no-referrer', cache: 'no-cache'
+      }, 5000, response => response.text());
+      if (body.length <= 131072) setAttribution(JSON.parse(body));
     } catch { /* Empty allowlists: no query parameters are sent. */ }
 
     // The service never needs cookies for collection or public counts.
@@ -82,7 +91,7 @@
     });
     const note = document.createElement('p');
     note.textContent = 'Учтённые открытия страниц, включая повторные. Периоды — по UTC (новый день в 03:00 по Москве). Данные могут задерживаться до 4 часов. ';
-    const link = document.createElement('a'); link.href = 'privacy.html'; link.textContent = 'О статистике'; note.append(link);
+    const link = document.createElement('a'); link.href = new URL('../privacy.html', base).href; link.textContent = 'О статистике'; note.append(link);
     const status = document.createElement('p'); status.textContent = 'Загрузка статистики…';
     section.append(heading, grid, note, status); footer.append(section);
     let generation = 0;
@@ -96,9 +105,9 @@
       const results = await Promise.allSettled(starts.map(async start => {
         const url = new URL('/counter/TOTAL.json', origin);
         if (start) url.searchParams.set('start', start);
-        const r = await fetch(url, {credentials: 'omit', referrerPolicy: 'no-referrer', signal: AbortSignal.timeout(10000)});
-        if (!r.ok) throw new Error('unavailable');
-        const body = await r.json();
+        const body = await fetchWithTimeout(url, {
+          credentials: 'omit', referrerPolicy: 'no-referrer'
+        }, 10000, response => response.json());
         const value = String(body.count);
         if (!/^(?:\d+|\d{1,3}(?:[ ,.\u00a0\u202f'’]\d{3})+)$/.test(value)) throw new Error('invalid count');
         const n = Number(value.replace(/\D/g, ''));
