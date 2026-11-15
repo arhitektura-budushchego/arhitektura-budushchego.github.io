@@ -57,7 +57,7 @@
     if (!excluded) {
       window.goatcounter = {no_onload: true, no_events: true};
       const tracker = document.createElement('script');
-      tracker.async = true; tracker.src = 'https://gc.zgo.at/count.js';
+      tracker.async = true; tracker.src = new URL('goatcounter-count.js', base).href;
       tracker.referrerPolicy = 'no-referrer';
       tracker.setAttribute('data-goatcounter', origin + '/count');
       tracker.onload = () => {
@@ -95,30 +95,39 @@
     const status = document.createElement('p'); status.textContent = 'Загрузка статистики…';
     section.append(heading, grid, note, status); footer.append(section);
     let generation = 0;
+    let snapshot;
+
     async function refresh() {
       const current = ++generation;
-      const today = new Date().toISOString().slice(0, 10);
-      const month = today.slice(0, 7) + '-01';
-      // No relative "month": GoatCounter interprets it as the last 30 days.
-      const starts = [today, month, null];
-      cells.forEach(cell => { cell.textContent = '—'; });
-      const results = await Promise.allSettled(starts.map(async start => {
-        const url = new URL('/counter/TOTAL.json', origin);
-        if (start) url.searchParams.set('start', start);
-        const body = await fetchWithTimeout(url, {
-          credentials: 'omit', referrerPolicy: 'no-referrer'
+      try {
+        const data = await fetchWithTimeout(new URL('totals.json', base), {
+          credentials: 'omit', cache: 'no-cache'
         }, 10000, response => response.json());
-        const value = String(body.count);
-        if (!/^(?:\d+|\d{1,3}(?:[ ,.\u00a0\u202f'’]\d{3})+)$/.test(value)) throw new Error('invalid count');
-        const n = Number(value.replace(/\D/g, ''));
-        if (!Number.isSafeInteger(n)) throw new Error('invalid count');
-        return new Intl.NumberFormat('ru-RU').format(n);
-      }));
-      if (current !== generation) return;
-      // A response started before UTC midnight must not be labelled "today" afterwards.
-      if (today !== new Date().toISOString().slice(0, 10)) { refresh(); return; }
-      results.forEach((r, i) => { if (r.status === 'fulfilled') cells[i].textContent = r.value; });
-      status.textContent = results.some(r => r.status === 'rejected') ? 'Часть статистики временно недоступна.' : 'Данные получены из GoatCounter.';
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(data.day) ||
+            !Number.isFinite(Date.parse(data.fetchedAt)) ||
+            ![data.today, data.month, data.total].every(n => Number.isSafeInteger(n) && n >= 0)) {
+          throw new Error('invalid totals');
+        }
+        if (current !== generation) return;
+        snapshot = data;
+      } catch {
+        if (current !== generation) return;
+      }
+      const today = new Date().toISOString().slice(0, 10);
+      const numbers = snapshot ? [
+        snapshot.day === today ? snapshot.today : null,
+        snapshot.day.slice(0, 7) === today.slice(0, 7) ? snapshot.month : null,
+        snapshot.total
+      ] : [null, null, null];
+      const format = new Intl.NumberFormat('ru-RU');
+      numbers.forEach((number, index) => {
+        cells[index].textContent = number === null ? '—' : format.format(number);
+      });
+      status.textContent = snapshot
+        ? 'Данные GoatCounter получены ' + new Intl.DateTimeFormat('ru-RU', {
+            dateStyle: 'short', timeStyle: 'short', timeZone: 'Europe/Moscow'
+          }).format(new Date(snapshot.fetchedAt)) + ' (МСК).'
+        : 'Статистика временно недоступна.';
     }
     refresh().catch(() => { status.textContent = 'Статистика временно недоступна.'; });
     // Keep long-open tabs and UTC month/day boundaries correct; never add tracking hits here.

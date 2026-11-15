@@ -1,0 +1,49 @@
+name: Publish site and visitor totals
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    - cron: '19 * * * *'
+    - cron: '3 0 * * *'
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Prepare site files
+        run: |
+          mkdir _site
+          git archive HEAD | tar -x -C _site
+          rm -rf _site/.github
+      - name: Read existing GoatCounter totals
+        run: |
+          if ! python3 analytics/publish-totals.py _site/analytics/totals.json; then
+            echo "::warning::GoatCounter unavailable; preserving the last published snapshot"
+            curl --fail --silent --show-error --max-time 20 \
+              https://arhitektura-budushchego.github.io/analytics/totals.json \
+              -o _site/analytics/totals.json
+            python3 -m json.tool _site/analytics/totals.json >/dev/null
+          fi
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+      - uses: actions/deploy-pages@v4
+        id: deployment
